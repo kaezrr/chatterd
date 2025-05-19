@@ -16,6 +16,8 @@ datasource db {
 
 model User {
   id                    Int             @id @default(autoincrement())
+  name                  String          @unique
+  password              String
   about                 String
   photoUrl              String
   sentFriendRequest     FriendRequest[] @relation("FriendSent")
