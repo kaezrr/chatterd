@@ -13,3 +13,38 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id                    Int             @id @default(autoincrement())
+  about                 String
+  photoUrl              String
+  sentFriendRequest     FriendRequest[] @relation("FriendSent")
+  receivedFriendRequest FriendRequest[] @relation("FriendReceive")
+  messagesSent          Message[]       @relation("MsgSent")
+  messagesReceived      Message[]       @relation("MsgReceive")
+  friends               Friend[]
+}
+
+model Friend {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  fromId    Int
+  toId      Int
+  from      User     @relation("MsgSent", fields: [fromId], references: [id])
+  to        User     @relation("MsgReceive", fields: [toId], references: [id])
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model FriendRequest {
+  id     Int  @id @default(autoincrement())
+  fromId Int
+  toId   Int
+  from   User @relation("FriendSent", fields: [fromId], references: [id])
+  to     User @relation("FriendReceive", fields: [toId], references: [id])
+}
