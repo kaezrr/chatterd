@@ -5,6 +5,9 @@ import passport from "./passport";
 import db from "./db";
 import "dotenv/config";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import userRouter from "./routes/user";
+import { errorHandler } from "./utils";
+import authRouter from "./routes/auth";
 
 const app = express();
 
@@ -28,12 +31,9 @@ app.use(
   }),
 );
 app.use(passport.session());
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({
-    error: "Something went wrong...",
-  });
-});
+app.use("/users", userRouter);
+app.use("/auth", authRouter);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

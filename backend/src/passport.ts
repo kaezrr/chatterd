@@ -2,6 +2,13 @@ import passport from "passport";
 import passportLocal from "passport-local";
 import bcrypt from "bcryptjs";
 import db from "./db";
+import { User as PrismaUser } from "@prisma/client";
+
+declare global {
+  namespace Express {
+    interface User extends PrismaUser {}
+  }
+}
 
 passport.use(
   new passportLocal.Strategy(async (username, password, done) => {
@@ -10,11 +17,11 @@ passport.use(
     });
 
     if (!user) {
-      return done(new Error("Username doesn't match"), false);
+      return done(null, false, { message: "Username doesn't match" });
     }
 
-    if (!(await bcrypt.compare(user.password, password))) {
-      return done(new Error("Password doesn't match"), false);
+    if (!(await bcrypt.compare(password, user.password))) {
+      return done(null, false, { message: "Password doesn't match" });
     }
 
     return done(null, user);
