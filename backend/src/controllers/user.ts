@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import db from "../db";
+import multer from "multer";
+import { nanoid } from "nanoid";
+import path from "path";
 
 const getCurrentUser = async (
   req: Request,
@@ -28,16 +31,57 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const updateProfilePicture = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {};
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, path.join(__dirname, "..", "..", "public"));
+  },
+  filename: (_req, file, cb) => {
+    cb(null, nanoid() + path.extname(file.originalname));
+  },
+});
 
-const updateAbout = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {};
+const upload = multer({ storage: storage });
+
+const updateProfilePicture = [
+  upload.single("avatar"),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.file) {
+        res.status(400).json({ message: "error setting photo" });
+        return;
+      }
+      const user = await db.user.update({
+        where: { id: req.user!.id },
+        data: {
+          photoUrl: req.file?.filename,
+        },
+        select: { name: true, photoUrl: true, about: true },
+      });
+      res.json({ message: "successfully updated photo", user });
+    } catch (err) {
+      next(err);
+    }
+  },
+];
+
+const updateAbout = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { about }: { about: string } = req.body;
+    const user = await db.user.update({
+      where: { id: req.user!.id },
+      data: {
+        about: about,
+      },
+      select: {
+        name: true,
+        about: true,
+        photoUrl: true,
+      },
+    });
+    res.json({ message: "successfully updated about", user });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export { getCurrentUser, updateAbout, updateProfilePicture, deleteUser };
