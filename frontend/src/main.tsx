@@ -1,9 +1,13 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./pages/App.tsx";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import "@mantine/core/styles.css";
+import { createTheme, MantineProvider } from "@mantine/core";
+
 import Protected from "./pages/Protected.tsx";
 import Home from "./pages/Home.tsx";
+import App from "./pages/App.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,8 +28,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+const theme = createTheme({
+  fontFamily: "Verdana, sans-serif",
+  primaryColor: "cyan",
+});
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <MantineProvider defaultColorScheme="dark" theme={theme}>
+      <RouterProvider router={router} />
+    </MantineProvider>
   </StrictMode>,
 );

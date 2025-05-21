@@ -1,9 +1,7 @@
 import "@mantine/core/styles.css";
-import { MantineProvider } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
-import globalTheme from "../theme.tsx";
 import LoadingBar from "../components/LoadingBar.tsx";
 
 export default function Main({ children }: { children: React.ReactNode }) {
@@ -21,10 +19,5 @@ export default function Main({ children }: { children: React.ReactNode }) {
   if (!loading && !ok) {
     return <Navigate to="/signin" />;
   }
-
-  return (
-    <MantineProvider defaultColorScheme="dark" theme={globalTheme}>
-      {loading ? <LoadingBar /> : children}
-    </MantineProvider>
-  );
+  return loading ? <LoadingBar /> : children;
 }
