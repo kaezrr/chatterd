@@ -23,8 +23,7 @@ const signUpUser = [
   async (req: Request, res: Response, next: NextFunction) => {
     const result = validationResult(req);
     if (!result.isEmpty()) {
-      const errors = result.array().map((e) => ({ error: e.msg }));
-      res.status(400).json(errors);
+      res.status(400).json(result.array());
       return;
     }
 

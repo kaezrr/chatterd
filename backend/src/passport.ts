@@ -17,11 +17,15 @@ passport.use(
     });
 
     if (!user) {
-      return done(null, false, { message: "Username doesn't match" });
+      return done(null, false, {
+        message: "Username doesn't match",
+      });
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
-      return done(null, false, { message: "Password doesn't match" });
+      return done(null, false, {
+        message: "Password doesn't match",
+      });
     }
 
     return done(null, user);

@@ -9,10 +9,10 @@ import { LoginForm } from "../components/LoginForm.tsx";
 export default function App({ signin }: { signin: Boolean }) {
   return (
     <MantineProvider defaultColorScheme="dark" theme={globalTheme}>
-      <AppShell padding="md" header={{ height: 70 }}>
+      <AppShell padding="md" header={{ height: 60 }}>
         <AppShell.Header p="xs">
           <Group justify="space-between" align="center">
-            <Title order={1}>Chatterd</Title>
+            <Title order={2}>Chatterd</Title>
             <Anchor fz="xl" href={signin ? "/signup" : "/signin"}>
               {signin ? "Sign up" : "Sign in"}
             </Anchor>
