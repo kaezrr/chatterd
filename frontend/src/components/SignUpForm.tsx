@@ -8,8 +8,10 @@ import {
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
 
 export function SignUpForm() {
+  const navigate = useNavigate();
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -29,11 +31,29 @@ export function SignUpForm() {
   });
 
   const [visible, { toggle }] = useDisclosure(false);
+  const signUpUser = async (values: { username: string; password: string }) => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const response = await fetch(`${apiUrl}/auth/signup`, {
+      body: JSON.stringify(values),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    const data: { path: "username" | "password"; msg: string }[] =
+      await response.json();
+    if (!response.ok) {
+      const errors = { username: "", password: "" };
+      data.forEach((e) => (errors[e.path] = e.msg));
+      form.setErrors(errors);
+      return;
+    }
+    navigate("/signin");
+  };
 
   return (
     <Stack align="center">
       <Title order={3}>Create a new account</Title>
-      <form onSubmit={form.onSubmit((values) => console.log(values))}>
+      <form onSubmit={form.onSubmit(signUpUser)}>
         <TextInput
           required
           withAsterisk
