@@ -1,11 +1,10 @@
-// TODO: get path that gets all friends
-// TODO: delete path that removes friend with id
 import { Router } from "express";
 import { authenticateUser } from "../utils";
+import { getFriends, deleteFriend } from "../controllers/friend";
 
 const friendRouter = Router();
 
-friendRouter.get("/", authenticateUser);
-friendRouter.delete("/:userId", authenticateUser);
+friendRouter.get("/", authenticateUser, getFriends);
+friendRouter.delete("/:userId", authenticateUser, deleteFriend);
 
 export default friendRouter;
