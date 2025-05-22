@@ -12,7 +12,7 @@ const getCurrentUser = async (
   try {
     const user = await db.user.findUnique({
       where: { id: req.user!.id },
-      select: { name: true, photoUrl: true, about: true },
+      select: { id: true, name: true, photoUrl: true, about: true },
     });
     res.json(user);
   } catch (err) {
@@ -55,7 +55,7 @@ const updateProfilePicture = [
         data: {
           photoUrl: req.file?.filename,
         },
-        select: { name: true, photoUrl: true, about: true },
+        select: { id: true, name: true, photoUrl: true, about: true },
       });
       res.json({ message: "successfully updated photo", user });
     } catch (err) {
@@ -72,11 +72,7 @@ const updateAbout = async (req: Request, res: Response, next: NextFunction) => {
       data: {
         about: about,
       },
-      select: {
-        name: true,
-        about: true,
-        photoUrl: true,
-      },
+      select: { id: true, name: true, about: true, photoUrl: true },
     });
     res.json({ message: "successfully updated about", user });
   } catch (error) {

@@ -1,9 +1,11 @@
 import { AppShell, Group, Title, Anchor, Tabs, Avatar } from "@mantine/core";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import LoadingBar from "../components/LoadingBar";
-import { useNavigate } from "react-router-dom";
 import Profile from "../components/Profile";
+import Friends from "../components/Friends";
+import RequestManager from "../components/RequestManager";
 
 export default function Home() {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -44,19 +46,25 @@ export default function Home() {
           />
           <Title order={2}>Welcome {userData.name}!</Title>
           <Anchor fz="xl" onClick={signOut}>
-            Sign out
+            Sign Out
           </Anchor>
         </Group>
       </AppShell.Header>
       <AppShell.Main>
-        <Tabs orientation="horizontal" defaultValue="gallery">
+        <Tabs orientation="horizontal" defaultValue="messages">
           <Tabs.List grow>
-            <Tabs.Tab value="message">Messages</Tabs.Tab>
+            <Tabs.Tab value="messages">Messages</Tabs.Tab>
             <Tabs.Tab value="friends">Friends</Tabs.Tab>
+            <Tabs.Tab value="requests">Requests</Tabs.Tab>
             <Tabs.Tab value="account">Account</Tabs.Tab>
           </Tabs.List>
-          <Tabs.Panel value="message">message tab content</Tabs.Panel>
-          <Tabs.Panel value="friends">friends tab content</Tabs.Panel>
+          <Tabs.Panel value="messages">message tab content</Tabs.Panel>
+          <Tabs.Panel value="friends">
+            <Friends />
+          </Tabs.Panel>
+          <Tabs.Panel value="requests">
+            <RequestManager />
+          </Tabs.Panel>
           <Tabs.Panel value="account">
             <Profile user={userData} />
           </Tabs.Panel>

@@ -11,7 +11,7 @@ export default function App({ signin }: { signin: Boolean }) {
         <Group justify="space-between" align="center">
           <Title order={2}>Chatterd</Title>
           <Anchor fz="xl" component={Link} to={signin ? "/signup" : "/signin"}>
-            {signin ? "Sign up" : "Sign in"}
+            {signin ? "Sign Up" : "Sign In"}
           </Anchor>
         </Group>
       </AppShell.Header>
