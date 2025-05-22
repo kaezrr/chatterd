@@ -1,13 +1,5 @@
-import {
-  Popover,
-  Button,
-  Avatar,
-  FileButton,
-  TextInput,
-  Group,
-} from "@mantine/core";
+import { Button, Avatar, FileButton, TextInput, Group } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 
 type User = {
@@ -16,7 +8,6 @@ type User = {
   about: string;
 };
 
-// TODO: make avatar update after submission
 export default function Profile({ user }: { user: User }) {
   const apiUrl = import.meta.env.VITE_API_URL;
   const form = useForm({
@@ -43,7 +34,6 @@ export default function Profile({ user }: { user: User }) {
       title: "About updated!",
       message: "Please refresh the page to see changes.",
     });
-    close();
   };
 
   const updateAvatar = (file: File | null) => {
@@ -63,46 +53,31 @@ export default function Profile({ user }: { user: User }) {
         title: "Avatar updated!",
         message: "Please refresh the page to see changes.",
       });
-      close();
     });
   };
 
-  const [opened, { toggle, close }] = useDisclosure(false);
-
   return (
-    <Popover
-      width={350}
-      position="bottom"
-      withArrow
-      shadow="md"
-      opened={opened}
-      trapFocus
-      onDismiss={close}
-    >
-      <Popover.Target>
-        <Avatar
-          color="initials"
-          name={user.name}
-          src={`${apiUrl}/public/${user.photoUrl}`}
-          onClick={toggle}
+    <Group p="xl" justify="center" gap="xl">
+      <Avatar
+        color="initials"
+        name={user.name}
+        src={`${apiUrl}/public/${user.photoUrl}`}
+        size="200"
+      />
+      <form onSubmit={form.onSubmit(updateAbout)}>
+        <TextInput
+          label="About"
+          placeholder="A brief description about yourself"
+          key={form.key("about")}
+          {...form.getInputProps("about")}
         />
-      </Popover.Target>
-      <Popover.Dropdown>
-        <form onSubmit={form.onSubmit(updateAbout)}>
-          <TextInput
-            label="About"
-            placeholder="A brief description about yourself"
-            key={form.key("about")}
-            {...form.getInputProps("about")}
-          />
-          <Group grow justify="flex-end" mt="md">
-            <Button type="submit">Update About</Button>
-            <FileButton onChange={updateAvatar} accept="image/png,image/jpeg">
-              {(props) => <Button {...props}>Update avatar</Button>}
-            </FileButton>
-          </Group>
-        </form>
-      </Popover.Dropdown>
-    </Popover>
+        <Group grow justify="flex-end" mt="md">
+          <FileButton onChange={updateAvatar} accept="image/png,image/jpeg">
+            {(props) => <Button {...props}>Update avatar</Button>}
+          </FileButton>
+          <Button type="submit">Update About</Button>
+        </Group>
+      </form>
+    </Group>
   );
 }
