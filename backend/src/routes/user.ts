@@ -6,7 +6,6 @@ import {
   updateProfilePicture,
   deleteUser,
 } from "../controllers/user";
-import { signOutUser } from "../controllers/auth";
 
 const userRouter = Router();
 

@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import session from "express-session";
 import cors from "cors";
 import passport from "./passport";
@@ -8,6 +8,8 @@ import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import userRouter from "./routes/user";
 import { errorHandler } from "./utils";
 import authRouter from "./routes/auth";
+import requestRouter from "./routes/requests";
+import friendRouter from "./routes/friend";
 
 const app = express();
 
@@ -37,6 +39,8 @@ app.use(
 app.use(passport.session());
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
+app.use("/requests", requestRouter);
+app.use("/friends", friendRouter);
 app.use("/public", express.static("public"));
 app.use(errorHandler);
 
