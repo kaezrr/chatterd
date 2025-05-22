@@ -19,7 +19,6 @@ app.use(
 );
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static("images"));
 app.use(
   session({
     cookie: {
@@ -38,6 +37,7 @@ app.use(
 app.use(passport.session());
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
+app.use("/public", express.static("public"));
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;

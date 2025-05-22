@@ -3,11 +3,13 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 import { createTheme, MantineProvider } from "@mantine/core";
 
 import Protected from "./pages/Protected.tsx";
 import Home from "./pages/Home.tsx";
 import App from "./pages/App.tsx";
+import { Notifications } from "@mantine/notifications";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +38,7 @@ const theme = createTheme({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider defaultColorScheme="dark" theme={theme}>
+      <Notifications />
       <RouterProvider router={router} />
     </MantineProvider>
   </StrictMode>,

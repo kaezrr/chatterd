@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 import LoadingBar from "../components/LoadingBar";
 import { useNavigate } from "react-router-dom";
+import Profile from "../components/Profile";
 
 export default function Home() {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -36,7 +37,7 @@ export default function Home() {
     <AppShell padding="md" header={{ height: 60 }}>
       <AppShell.Header p="xs">
         <Group justify="space-between" align="center">
-          <Avatar color="initials" name={userData.name} />
+          <Profile user={userData} />
           <Title order={2}>Welcome {userData.name}!</Title>
           <Anchor fz="xl" onClick={signOut}>
             Sign out
