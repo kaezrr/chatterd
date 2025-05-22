@@ -50,9 +50,12 @@ model Message {
 }
 
 model FriendRequest {
-  id     Int  @id @default(autoincrement())
+  id     Int  @default(autoincrement())
   fromId Int
   toId   Int
   from   User @relation("FriendSent", fields: [fromId], references: [id])
   to     User @relation("FriendReceive", fields: [toId], references: [id])
+
+  @@id([id, fromId, toId])
+  @@unique([fromId, toId])
 }
