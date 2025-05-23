@@ -76,7 +76,7 @@ export default function Chat() {
             ))}
           </Tabs.List>
           {friends.map((e) => (
-            <Tabs.Panel value={e.name} pl="md" pr="md">
+            <Tabs.Panel key={e.id} value={e.name} pl="md" pr="md">
               <PersonalChat who={e.id} token={update} refresh={setUpdate} />
             </Tabs.Panel>
           ))}
@@ -120,7 +120,7 @@ function PersonalChat({
 
   const [messages, setMessages] = useState<Message[]>([]);
   useEffect(() => {
-    fetch(`${apiUrl}/messages/`, { credentials: "include" })
+    fetch(`${apiUrl}/messages/${who}`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setMessages(data))
       .catch((_) => {

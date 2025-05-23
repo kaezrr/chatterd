@@ -10,6 +10,7 @@ import { errorHandler } from "./utils";
 import authRouter from "./routes/auth";
 import requestRouter from "./routes/requests";
 import friendRouter from "./routes/friend";
+import messageRouter from "./routes/messages";
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/requests", requestRouter);
 app.use("/friends", friendRouter);
+app.use("/messages", messageRouter);
 app.use("/public", express.static("public"));
 app.use(errorHandler);
 
