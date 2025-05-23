@@ -23,6 +23,7 @@ type User = {
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function Friends() {
+  const [update, setUpdate] = useState(0);
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -64,15 +65,25 @@ export default function Friends() {
           <Button type="submit">Send Request</Button>
         </Group>
       </form>
-      <Title order={3}>Friends List</Title>
-      <FriendList />
+      <Group>
+        <Title order={3}>Friends List</Title>
+        <Button variant="outline" onClick={() => setUpdate((o) => o + 1)}>
+          Refresh
+        </Button>
+      </Group>
+      <FriendList update={update} setUpdate={setUpdate} />
     </Stack>
   );
 }
 
-function FriendList() {
+function FriendList({
+  update,
+  setUpdate,
+}: {
+  update: number;
+  setUpdate: React.Dispatch<React.SetStateAction<number>>;
+}) {
   const [friends, setFriends] = useState<User[]>([]);
-  const [update, setUpdate] = useState(0);
 
   useEffect(() => {
     fetch(`${apiUrl}/friends/`, { credentials: "include" })
@@ -131,7 +142,9 @@ function FriendBar({ user, delFunc }: { user: User; delFunc: () => void }) {
         <Avatar
           color="initials"
           name={user.name}
-          src={`${apiUrl}/public/${user.photoUrl}`}
+          src={
+            user.photoUrl !== null ? `${apiUrl}/public/${user.photoUrl}` : ""
+          }
         />
         <Text>{user.name}</Text>
         <Text style={{ flex: 1 }} c="dimmed" size="sm">

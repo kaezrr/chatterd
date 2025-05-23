@@ -61,7 +61,7 @@ export default function Profile({ user }: { user: User }) {
       <Avatar
         color="initials"
         name={user.name}
-        src={`${apiUrl}/public/${user.photoUrl}`}
+        src={user.photoUrl !== null ? `${apiUrl}/public/${user.photoUrl}` : ""}
         size="200"
       />
       <form onSubmit={form.onSubmit(updateAbout)}>

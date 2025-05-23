@@ -6,7 +6,6 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import { createTheme, MantineProvider } from "@mantine/core";
 
-import Protected from "./pages/Protected.tsx";
 import Home from "./pages/Home.tsx";
 import App from "./pages/App.tsx";
 import { Notifications } from "@mantine/notifications";
@@ -14,11 +13,7 @@ import { Notifications } from "@mantine/notifications";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Protected>
-        <Home />
-      </Protected>
-    ),
+    element: <Home />,
   },
   {
     path: "/signin",

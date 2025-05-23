@@ -105,7 +105,9 @@ function RequestBar({
         <Avatar
           color="initials"
           name={user.name}
-          src={`${apiUrl}/public/${user.photoUrl}`}
+          src={
+            user.photoUrl !== null ? `${apiUrl}/public/${user.photoUrl}` : ""
+          }
         />
         <Text>{user.name}</Text>
         <Text style={{ flex: 1 }} c="dimmed" size="sm">
