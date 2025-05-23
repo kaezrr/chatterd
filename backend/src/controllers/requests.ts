@@ -7,8 +7,8 @@ const getAllRequests = async (
   next: NextFunction,
 ) => {
   try {
-    const requests = await db.friendRequest.findMany({
-      where: { toId: req.user!.id },
+    const requests = await db.friendShip.findMany({
+      where: { toId: req.user!.id, status: "PENDING" },
       select: {
         id: true,
         from: { omit: { password: true } },
@@ -26,7 +26,40 @@ const acceptRequest = async (
   next: NextFunction,
 ) => {
   try {
-    res.json("dummy");
+    const requestId = Number(req.params.requestId);
+    if (isNaN(requestId)) {
+      res.status(400).json({ message: "invalid request id" });
+      return;
+    }
+
+    const freq = await db.friendShip.findUnique({
+      where: { id: requestId },
+    });
+
+    if (!freq) {
+      res.status(400).json({ message: "invalid request id" });
+      return;
+    }
+
+    await db.friendShip.createMany({
+      data: [
+        { fromId: freq.fromId, toId: freq.toId },
+        { fromId: freq.toId, toId: freq.fromId },
+      ],
+      skipDuplicates: true,
+    });
+
+    await db.friendShip.updateMany({
+      where: {
+        OR: [
+          { fromId: freq.fromId, toId: freq.toId },
+          { fromId: freq.toId, toId: freq.fromId },
+        ],
+      },
+      data: { status: "ACCEPTED" },
+    });
+
+    res.json({ message: "successfully accepted friend request" });
   } catch (e) {
     next(e);
   }
@@ -38,7 +71,26 @@ const rejectRequest = async (
   next: NextFunction,
 ) => {
   try {
-    res.json("dummy");
+    const requestId = Number(req.params.requestId);
+    if (isNaN(requestId)) {
+      res.status(400).json({ message: "invalid request id" });
+      return;
+    }
+
+    const freq = await db.friendShip.findUnique({
+      where: { id: requestId },
+    });
+
+    if (!freq) {
+      res.status(400).json({ message: "invalid request id" });
+      return;
+    }
+
+    await db.friendShip.delete({
+      where: { id: requestId },
+    });
+
+    res.json({ message: "successfully rejected friend request" });
   } catch (e) {
     next(e);
   }
@@ -60,7 +112,7 @@ const createRequest = async (
       return;
     }
 
-    await db.friendRequest.create({
+    await db.friendShip.create({
       data: {
         fromId: req.user!.id,
         toId: userId.id,

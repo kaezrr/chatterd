@@ -38,7 +38,6 @@ export function LoginForm() {
       });
       return;
     }
-    console.log(data);
     navigate("/");
   };
 

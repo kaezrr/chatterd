@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Request {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 model Session {
   id        String   @id
   sid       String   @unique
@@ -21,22 +27,26 @@ model Session {
 }
 
 model User {
-  id                    Int             @id @default(autoincrement())
-  name                  String          @unique
-  password              String
-  about                 String?
-  photoUrl              String?
-  sentFriendRequest     FriendRequest[] @relation("FriendSent")
-  receivedFriendRequest FriendRequest[] @relation("FriendReceive")
-  messagesSent          Message[]       @relation("MsgSent")
-  messagesReceived      Message[]       @relation("MsgReceive")
-  friends               Friend[]
+  id               Int          @id @default(autoincrement())
+  name             String       @unique
+  password         String
+  about            String?
+  photoUrl         String?
+  messagesSent     Message[]    @relation("MsgSent")
+  messagesReceived Message[]    @relation("MsgReceive")
+  friendsFrom      FriendShip[] @relation("FriendShipsUser1")
+  friendsTo        FriendShip[] @relation("FriendShipsUser2")
 }
 
-model Friend {
-  id     Int  @id @default(autoincrement())
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+model FriendShip {
+  id     Int     @id @default(autoincrement())
+  from   User    @relation("FriendShipsUser1", fields: [fromId], references: [id])
+  to     User    @relation("FriendShipsUser2", fields: [toId], references: [id])
+  fromId Int
+  toId   Int
+  status Request @default(PENDING)
+
+  @@unique([fromId, toId])
 }
 
 model Message {
@@ -47,15 +57,4 @@ model Message {
   to        User     @relation("MsgReceive", fields: [toId], references: [id])
   content   String
   createdAt DateTime @default(now())
-}
-
-model FriendRequest {
-  id     Int  @default(autoincrement())
-  fromId Int
-  toId   Int
-  from   User @relation("FriendSent", fields: [fromId], references: [id])
-  to     User @relation("FriendReceive", fields: [toId], references: [id])
-
-  @@id([id, fromId, toId])
-  @@unique([fromId, toId])
 }

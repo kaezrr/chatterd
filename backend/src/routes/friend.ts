@@ -5,6 +5,6 @@ import { getFriends, deleteFriend } from "../controllers/friend";
 const friendRouter = Router();
 
 friendRouter.get("/", authenticateUser, getFriends);
-friendRouter.delete("/:userId", authenticateUser, deleteFriend);
+friendRouter.delete("/:friendId", authenticateUser, deleteFriend);
 
 export default friendRouter;

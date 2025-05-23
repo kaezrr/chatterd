@@ -66,6 +66,7 @@ function RequestList() {
           ? "Friend added successfully"
           : "Removed request successfully",
       });
+      setUpdate((o) => o + 1);
     } catch (e) {
       notifications.show({
         title: "Something went wrong!",

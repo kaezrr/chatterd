@@ -3,22 +3,11 @@ import db from "../db";
 
 const getFriends = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const friends = await db.user.findUnique({
-      where: { id: req.user!.id },
-      include: {
-        friends: {
-          select: {
-            id: true,
-            user: {
-              select: { name: true, photoUrl: true, about: true },
-            },
-          },
-        },
-      },
+    const friends = await db.friendShip.findMany({
+      where: { toId: req.user!.id, status: "ACCEPTED" },
+      select: { from: { omit: { password: true } } },
     });
-    const data = friends
-      ? friends.friends.map((e) => ({ id: e.id, ...e.user }))
-      : [];
+    const data = friends ? friends.map((e) => e.from) : [];
     res.json(data);
   } catch (e) {
     next(e);
@@ -37,24 +26,14 @@ const deleteFriend = async (
       return;
     }
 
-    const you = await db.user.update({
-      where: { id: req.user!.id },
-      data: {
-        friends: { disconnect: [{ id: friendId }] },
+    await db.friendShip.deleteMany({
+      where: {
+        OR: [
+          { fromId: req.user!.id, toId: friendId },
+          { fromId: friendId, toId: req.user!.id },
+        ],
       },
     });
-
-    const friend = await db.user.update({
-      where: { id: friendId },
-      data: {
-        friends: { disconnect: [{ id: req.user!.id }] },
-      },
-    });
-
-    if (!friend || !you) {
-      res.status(400).json({ message: "Invalid friend id" });
-      return;
-    }
 
     res.json({ message: "Successfully removed friend!" });
   } catch (e) {
