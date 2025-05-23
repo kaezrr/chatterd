@@ -2,6 +2,7 @@ import { AppShell, Group, Title, Anchor, Tabs, Avatar } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Chat from "../components/Chat";
 import LoadingBar from "../components/LoadingBar";
 import Profile from "../components/Profile";
 import Friends from "../components/Friends";
@@ -82,7 +83,9 @@ function Main({ userData }: { userData: User }) {
             <Tabs.Tab value="requests">Requests</Tabs.Tab>
             <Tabs.Tab value="account">Account</Tabs.Tab>
           </Tabs.List>
-          <Tabs.Panel value="messages">message tab content</Tabs.Panel>
+          <Tabs.Panel value="messages">
+            <Chat />
+          </Tabs.Panel>
           <Tabs.Panel value="friends">
             <Friends />
           </Tabs.Panel>
